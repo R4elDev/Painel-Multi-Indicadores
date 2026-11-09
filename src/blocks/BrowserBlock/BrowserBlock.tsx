@@ -61,6 +61,7 @@ export function BrowserBlock({ config, presenting, onChange, onRemove }: Browser
 
   const setCrop = useCallback((next: Crop) => onChange({ crop: next }), [onChange])
 
+  // URL-based hints stay visible after load, which also fires for blocked frames.
   const knownHint = url ? embedHint(url) : null
   const hint = knownHint ?? (slow || hintOpen ? GENERIC_EMBED_HINT : null)
   const showHint = Boolean(url) && !presenting && !hintDismissed && (Boolean(knownHint) || slow || hintOpen)

@@ -34,10 +34,34 @@ export function getEmbedHint(value: string): EmbedHint | null {
   return null;
 }
 
+/** Advisory list: load also fires for iframe refusals, so it cannot clear this hint. */
+const KNOWN_FRAME_BLOCKING_HOSTS = new Set([
+  'google.com', 'www.google.com', 'accounts.google.com',
+  'login.microsoftonline.com', 'login.live.com', 'github.com', 'www.github.com',
+  'facebook.com', 'www.facebook.com', 'x.com', 'www.x.com',
+  'twitter.com', 'www.twitter.com', 'linkedin.com', 'www.linkedin.com',
+  'web.whatsapp.com',
+])
+export const KNOWN_FRAME_BLOCK_HINT =
+  'Este site costuma bloquear exibi\u00e7\u00e3o em iframe; use um link de incorpora\u00e7\u00e3o.'
+
+function hasKnownEmbedPath(url: URL): boolean {
+  const host = url.hostname.toLowerCase(), path = url.pathname.toLowerCase()
+  if (['google.com', 'www.google.com', 'docs.google.com', 'drive.google.com', 'lookerstudio.google.com', 'datastudio.google.com'].includes(host)) {
+    return /\/(embed|preview|pubhtml|pub|pubchart)(\/|$)/.test(path) ||
+      (path.startsWith('/maps') && url.searchParams.get('output') === 'embed')
+  }
+  if (host === 'app.powerbi.com') return path === '/reportembed'
+  if (host === 'view.officeapps.live.com') return true
+  if (host === 'facebook.com' || host === 'www.facebook.com') return path.startsWith('/plugins/')
+  return false
+}
+
 export function embedHint(value: string): string | null {
   try {
     const url = new URL(value)
     if (url.protocol === 'http:' && globalThis.location?.protocol === 'https:') return 'Este endereço HTTP pode ser bloqueado nesta página HTTPS. Use HTTPS.'
+    if (KNOWN_FRAME_BLOCKING_HOSTS.has(url.hostname.toLowerCase()) && !hasKnownEmbedPath(url)) return KNOWN_FRAME_BLOCK_HINT
     const hint = getEmbedHint(value)
     if (hint) return `${hint.service}: ${hint.message}`
     if (/(^|\.)youtube\.com$/.test(url.hostname) || url.hostname === 'youtu.be') return 'YouTube: use https://www.youtube.com/embed/ID_DO_VIDEO.'
