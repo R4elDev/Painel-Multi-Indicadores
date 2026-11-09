@@ -1,3 +1,4 @@
+import { Icon } from '../../components/icons'
 import { useState } from 'react'
 import { normalizeUrl, normalizeRefresh, embedHint, GENERIC_EMBED_HINT } from '../../lib/embed'
 import type { BrowserConfig } from '../../types'
@@ -60,8 +61,8 @@ export function BrowserSettings({ config, onSave, onCancel }: BrowserSettingsPro
           autoFocus
         />
       </label>
-      {error && <p role="alert">{error}</p>}
-      {url.trim() && <p role="note">{(() => { try { return embedHint(normalizeUrl(url)) ?? GENERIC_EMBED_HINT } catch { return 'Use uma URL http:// ou https:// válida.' } })()}</p>}
+      {error && <p role="alert" className="form-hint"><Icon name="alert" />{error}</p>}
+      {url.trim() && <p role="note" className="form-hint">{(() => { try { return embedHint(normalizeUrl(url)) ?? GENERIC_EMBED_HINT } catch { return 'Use uma URL http:// ou https:// válida.' } })()}</p>}
       <label>
         Auto-refresh (minutos, 0 = desligado)
         <input type="number" min={0} max={1440} step="any" value={refresh} onChange={(e) => setRefresh(e.target.value)} />
@@ -90,11 +91,11 @@ export function BrowserSettings({ config, onSave, onCancel }: BrowserSettingsPro
         </label>
       </fieldset>
       <div className="settings-buttons">
-        <button type="button" onClick={onCancel}>
-          Cancelar
+        <button type="button" className="icon-button" aria-label="Cancelar" title="Cancelar" onClick={onCancel}>
+          <Icon name="x" />
         </button>
-        <button type="submit" className="primary">
-          Salvar
+        <button type="submit" className="primary" aria-label="Salvar configuração" title="Salvar configuração">
+          <Icon name="check" /> Salvar
         </button>
       </div>
     </form>

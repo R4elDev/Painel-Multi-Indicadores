@@ -1,3 +1,4 @@
+import { Icon } from '../../../components/icons'
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { TableData } from '../../../types';
@@ -113,7 +114,7 @@ export default function EditableTable({ data, onChange, readOnly = false }: Edit
   }
   return <section className="editable-table" aria-label="Tabela editável">
     {!readOnly && <div className="editable-table__toolbar">
-      <button ref={addRowButton} type="button" disabled={!data.colunas.length} onClick={() => {
+      <button ref={addRowButton} type="button" aria-label="Adicionar linha" title="Adicionar linha" disabled={!data.colunas.length} onClick={() => {
         const row: Record<string, string> = {};
         data.colunas.forEach(c => { row[c.id] = ''; });
         const rowId = crypto.randomUUID();
@@ -121,13 +122,13 @@ export default function EditableTable({ data, onChange, readOnly = false }: Edit
         setRowKeys(rowIds.current);
         focusIntent.current = { kind: 'cell', row: rowId, column: data.colunas[0].id };
         emit({ ...data, linhas: [...data.linhas, row] });
-      }}>Adicionar linha</button>
-      <button ref={addColumnButton} type="button" onClick={() => {
+      }}><Icon name="plus" />Adicionar linha</button>
+      <button ref={addColumnButton} type="button" aria-label="Adicionar coluna" title="Adicionar coluna" onClick={() => {
         const id = crypto.randomUUID();
         focusIntent.current = { kind: 'rename', column: id };
         emit({ colunas: [...data.colunas, { id, nome: 'Nova coluna' }],
           linhas: data.linhas.map(r => ({ ...r, [id]: '' })) });
-      }}>Adicionar coluna</button>
+      }}><Icon name="plus" />Adicionar coluna</button>
     </div>}
     <div className="editable-table__scroll">
       {!data.colunas.length ? <div className="editable-table__empty"><strong>Sua tabela começa aqui</strong>
@@ -136,17 +137,17 @@ export default function EditableTable({ data, onChange, readOnly = false }: Edit
           <div className="editable-table__heading">
             {active?.row === null && active.column === c.id ? input('Nome da coluna')
               : readOnly ? <span>{c.nome}</span>
-              : <button type="button" title="Renomear coluna"
+              : <button type="button" title="Renomear coluna" aria-label={'Renomear coluna ' + c.nome}
                 ref={el => { if (el) renameButtons.current.set(c.id, el); else renameButtons.current.delete(c.id); }}
                 onClick={() => edit({ row: null, column: c.id, value: c.nome })}>{c.nome || 'Sem nome'}</button>}
-            {!readOnly && <button type="button" aria-label={'Remover coluna ' + c.nome} onClick={() => {
+            {!readOnly && <button type="button" title={'Remover coluna ' + c.nome} aria-label={'Remover coluna ' + c.nome} onClick={() => {
               edit(null);
               const index = data.colunas.findIndex(col => col.id === c.id);
               const neighbor = data.colunas[index + 1] ?? data.colunas[index - 1];
               focusIntent.current = neighbor ? { kind: 'rename', column: neighbor.id } : { kind: 'addColumn' };
               emit({ colunas: data.colunas.filter(col => col.id !== c.id),
                 linhas: data.linhas.map(r => { const next = { ...r }; delete next[c.id]; return next; }) });
-            }}>×</button>}
+            }}><Icon name="x" /></button>}
           </div></th>)}
           {!readOnly && <th scope="col">Ações</th>}
         </tr></thead><tbody>{data.linhas.map((r, i) => <tr key={rowKeys[i]}>
@@ -162,7 +163,7 @@ export default function EditableTable({ data, onChange, readOnly = false }: Edit
             {active?.row === rowKeys[i] && active.column === c.id ? input(c.nome + ', linha ' + (i + 1))
               : <span className="editable-table__value">{r[c.id] || '\u00a0'}</span>}
           </td>)}
-          {!readOnly && <td><button type="button" aria-label={'Remover linha ' + (i + 1)} onClick={() => {
+          {!readOnly && <td><button type="button" title={'Remover linha ' + (i + 1)} aria-label={'Remover linha ' + (i + 1)} onClick={() => {
             edit(null);
             const neighbor = rowIds.current[i + 1] ?? rowIds.current[i - 1];
             focusIntent.current = neighbor
@@ -171,7 +172,7 @@ export default function EditableTable({ data, onChange, readOnly = false }: Edit
             rowIds.current = rowIds.current.filter((_, index) => index !== i);
             setRowKeys(rowIds.current);
             emit({ ...data, linhas: data.linhas.filter((_, n) => n !== i) });
-          }}>Remover</button></td>}
+          }}><Icon name="trash" /></button></td>}
         </tr>)}</tbody></table>}
       {!!data.colunas.length && !data.linhas.length && <div className="editable-table__empty">
         <strong>Nenhuma linha ainda</strong><p>{readOnly ? 'Ainda não há dados.' : 'Use “Adicionar linha” para inserir dados.'}</p>

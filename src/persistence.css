@@ -1,1 +1,9 @@
-.persistence-warning { padding: 12px; background: #fff1c2; color: #382700; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; position: relative; z-index: 100; }
+.persistence-warning {
+  display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: center;
+  margin: var(--space-3) var(--space-4) 0; padding: var(--space-3);
+  color: var(--text-muted); background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: var(--radius); font-size: 12px; line-height: 1.6; position: relative; z-index: 100;
+}
+.persistence-warning > svg { flex: none; }
+.persistence-warning > span { flex: 1; min-width: 180px; overflow-wrap: anywhere; }
+.app--presenting .persistence-warning { visibility: hidden; position: absolute; }

@@ -1,3 +1,4 @@
+import { Icon } from './icons'
 import type { ReactNode } from 'react'
 
 interface BlockFrameProps {
@@ -13,6 +14,7 @@ export function BlockFrame({ title, presenting, actions, children }: BlockFrameP
     <section className={`block${presenting ? ' block--presenting' : ''}`}>
       {!presenting && (
         <header className="block-header">
+          <Icon name="grip" className="block-grip" />
           <span className="block-title" title={title}>
             {title}
           </span>

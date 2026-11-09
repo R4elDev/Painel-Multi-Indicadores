@@ -1,3 +1,4 @@
+import { Icon } from './components/icons'
 import './persistence.css'
 import { PanelGrid } from './components/PanelGrid'
 import { usePanel } from './hooks/usePanel'
@@ -15,27 +16,27 @@ export default function App() {
   return (
     <div className={`app${presenting ? ' app--presenting' : ''}`}>
       {presenting ? (
-        <button type="button" className="exit-presentation" onClick={exit}>
-          Sair da apresentação (Esc)
+        <button type="button" className="exit-presentation icon-button" aria-label="Sair da apresentação (Esc)" title="Sair da apresentação (Esc)" onClick={exit}>
+          <Icon name="minimize" />
         </button>
       ) : (
         <header className="toolbar">
           <h1>Painel Multi-Indicadores</h1>
           <div className="toolbar-actions">
-            <button type="button" className="primary" onClick={addBrowser}>
-              + Bloco de navegador
+            <button type="button" className="primary" aria-label="Adicionar bloco" title="Adicionar bloco de navegador" onClick={addBrowser}>
+              <Icon name="plus" /> Adicionar bloco
             </button>
-            <button type="button" onClick={enter}>
-              ▶ Apresentar
+            <button type="button" className="icon-button" aria-label="Apresentar" title="Apresentar" onClick={enter}>
+              <Icon name="maximize" />
             </button>
           </div>
         </header>
       )}
       {!persistence.ok && <aside role="alert" className="persistence-warning">
-        <span>{persistence.message}</span>
-        <button onClick={() => exportJson(JSON.stringify(panel, null, 2), 'painel.json')}>Exportar painel JSON</button>
-        {persistence.original !== undefined && <button onClick={() => exportJson(persistence.original!, 'painel-original.json')}>Exportar original</button>}
-        {persistence.blocked && <button onClick={replaceStored}>Substituir original pelo painel atual</button>}
+        <Icon name="alert" /><span>{persistence.message}</span>
+        <button className="icon-button" aria-label="Exportar painel JSON" title="Exportar painel JSON" onClick={() => exportJson(JSON.stringify(panel, null, 2), 'painel.json')}><Icon name="download" /></button>
+        {persistence.original !== undefined && <button className="icon-button" aria-label="Exportar original" title="Exportar original" onClick={() => exportJson(persistence.original!, 'painel-original.json')}><Icon name="download" /></button>}
+        {persistence.blocked && <button className="icon-button" aria-label="Substituir original pelo painel atual" title="Substituir original pelo painel atual" onClick={replaceStored}><Icon name="check" /></button>}
       </aside>}
       <main className="main">
         <PanelGrid

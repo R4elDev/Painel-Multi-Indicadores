@@ -1,3 +1,4 @@
+import { Icon } from '../../components/icons'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { BlockFrame } from '../../components/BlockFrame'
 import { GENERIC_EMBED_HINT, embedHint, normalizeRefresh } from '../../lib/embed'
@@ -68,26 +69,26 @@ export function BrowserBlock({ config, presenting, onChange, onRemove }: Browser
 
   const actions = (
     <>
-      <button type="button" title="Recarregar" onClick={reload} disabled={!url}>
-        ⟳
+      <button type="button" title="Recarregar" aria-label="Recarregar" onClick={reload} disabled={!url}>
+        <Icon name="refresh" />
       </button>
       <button
         type="button"
-        title="Recortar / zoom"
+        title="Recortar / zoom" aria-label="Recortar / zoom"
         className={cropping ? 'active' : ''}
         onClick={() => setCropping(!cropping)}
         disabled={!url}
       >
-        ✂
+        <Icon name="crop" />
       </button>
-      <button type="button" title="Dica de embed" onClick={() => setHintPreferences(previous => ({ ...previous, [url]: !showHint }))}>
-        ?
+      <button type="button" title="Dica de embed" aria-label="Dica de embed" onClick={() => setHintPreferences(previous => ({ ...previous, [url]: !showHint }))}>
+        <Icon name="help" />
       </button>
-      <button type="button" title="Configurar" onClick={() => setSettingsOpen(true)}>
-        ⚙
+      <button type="button" title="Configurar" aria-label="Configurar" onClick={() => setSettingsOpen(true)}>
+        <Icon name="settings" />
       </button>
-      <button type="button" title="Remover bloco" className="danger" onClick={onRemove}>
-        ✕
+      <button type="button" title="Remover bloco" aria-label="Remover bloco" className="danger" onClick={onRemove}>
+        <Icon name="trash" />
       </button>
     </>
   )
@@ -113,8 +114,8 @@ export function BrowserBlock({ config, presenting, onChange, onRemove }: Browser
         ) : (
           <div className="empty">
             <p>Nenhuma URL configurada.</p>
-            <button type="button" onClick={() => setSettingsOpen(true)}>
-              Configurar
+            <button type="button" aria-label="Configurar bloco" title="Configurar bloco" onClick={() => setSettingsOpen(true)}>
+              <Icon name="settings" /> Configurar
             </button>
           </div>
         )}
@@ -130,16 +131,16 @@ export function BrowserBlock({ config, presenting, onChange, onRemove }: Browser
 
         {showHint && hint && (
           <div className="hint" role="note">
-            <span>{hint}</span>
+            <Icon name="alert" /><span>{hint}</span>
             <button
               type="button"
-              aria-label="Fechar dica"
+              aria-label="Fechar dica" title="Fechar dica"
               onClick={() => {
                 setHintPreferences(previous => ({ ...previous, [url]: false }))
                 setSlow(false)
               }}
             >
-              ✕
+              <Icon name="x" />
             </button>
           </div>
         )}

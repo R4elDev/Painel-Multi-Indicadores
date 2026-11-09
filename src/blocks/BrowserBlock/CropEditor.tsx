@@ -1,3 +1,4 @@
+import { Icon } from '../../components/icons'
 import { useEffect, useRef } from 'react'
 import type { Crop } from '../../types'
 
@@ -73,14 +74,14 @@ export function CropEditor({ crop, viewportWidth, onChange, onDone }: CropEditor
       />
       <div className="crop-bar">
         <span>Arraste para mover · roda do mouse = zoom ({Math.round(crop.zoom * 100)}%)</span>
-        <button type="button" onClick={fitWidth}>
-          Ajustar à largura
+        <button type="button" className="icon-button" aria-label="Ajustar à largura" title="Ajustar à largura" onClick={fitWidth}>
+          <Icon name="maximize" />
         </button>
-        <button type="button" onClick={() => onChange({ ...crop, x: 0, y: 0, zoom: 1 })}>
-          100%
+        <button type="button" className="icon-button" aria-label="Restaurar zoom 100%" title="Restaurar zoom 100%" onClick={() => onChange({ ...crop, x: 0, y: 0, zoom: 1 })}>
+          <Icon name="refresh" />
         </button>
-        <button type="button" className="primary" onClick={onDone}>
-          Concluir
+        <button type="button" className="primary" aria-label="Concluir recorte" title="Concluir recorte" onClick={onDone}>
+          <Icon name="check" /> Concluir
         </button>
       </div>
     </>
